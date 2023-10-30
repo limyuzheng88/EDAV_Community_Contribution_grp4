@@ -1,0 +1,90 @@
+---
+title: "Community Contribution"
+format: html
+editor: visual
+authors: Varun Agarwal(va2515), Yu Zheng Lim (yl5451)
+---
+
+## Importing Libraries
+
+```{r}
+library(ggplot2)
+library(data.table)
+library(ggridges)
+```
+
+```{r}
+head(Aus_athletes)
+```
+
+```{r}
+ggplot(data = Aus_athletes) +
+  geom_boxplot(aes(x = height, y = factor(sport), fill = sport))  +
+  labs(x = "Height (in cm)",
+       y = "Sport",
+       title = "BoxPlots for Height of Australian Athletes by Sport", )
+```
+
+```{r}
+ggplot(data = Aus_athletes) +
+  geom_density_ridges(aes(x = height, y = factor(sport), fill = sport),
+                      alpha = 0.6) +
+  labs(title = "Ridgeline Plots for Height of Australian Athletes by Sport",
+       x = "Height (in cm)",
+       y = "Sport")  +
+  theme_ridges(center_axis_labels = TRUE)
+```
+
+```{r}
+ggplot(data = Aus_athletes) +
+  geom_density_ridges(
+    aes(x=height,y=factor(sport),fill=sport),
+    alpha=0.6,
+    scale = 0.9
+  ) +
+  geom_boxplot(aes(x=height,y=factor(sport),fill = sport))  +
+  labs(
+    title = "Ridgeline with  Boxplots for \n Height of Australian Athletes by Sport",
+    x = "Height (in cm)",
+    y = "Sport"
+  ) +
+  theme_ridges(center_axis_labels = TRUE)
+```
+
+```{r}
+ggplot(data = Aus_athletes, aes(
+  x = height,
+  y = factor(sport),
+  fill = factor(stat(quantile)),
+)) +
+  stat_density_ridges(quantile_lines = TRUE,
+                      geom = "density_ridges_gradient") +
+  scale_fill_viridis_d(name = "Quartiles") +
+  labs(title = "Ridgeline Plots (with quantiles) for Height of \n Australian Athletes by Sport",
+       x = "Height (in cm)",
+       y = "Sport")+
+    theme_ridges(center_axis_labels = TRUE)
+```
+
+```{r}
+df <- copy(Aus_athletes)
+df <- setDT(df)
+df[, as.list(summary(height)), by = sport]
+```
+
+```{r}
+ggplot(data = Aus_athletes) +
+  stat_density_ridges(
+    aes(
+      x = height,
+      y = factor(sport),
+      fill = factor(sport)
+    ),
+    quantile_lines = TRUE
+    ) +
+    labs(title = "Ridgeline Plots (with quantiles) of Height of \n Australian Athletes by Sport",
+           x = "Height (in cm)",
+           y = "Sport"
+      ) +
+    theme_ridges(center_axis_labels = TRUE)
+```
